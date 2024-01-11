@@ -1,339 +1,325 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Mapley Map of Vermonty Stuff</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
-    <link 
-      rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script
-      src="https://code.jquery.com/jquery-3.7.0.min.js"
-      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-      crossorigin="anonymous"></script>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
-    </script>
-
-    <script data-goatcounter="https://maplemetrics.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script> <!--https://www.goatcounter.com/ does not track personal data, just visits!-->
-
-
- 
-<!-- Pendo -->
-
-
-  <script>
-    (function(apiKey){
-        (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
-        v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
-            o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
-            y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
-            z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
-            userID = 'carson-test';
-  console.log(userID);
-
-            pendo.initialize({
-              visitor: {
-                id:              userID,   // Required if user is logged in
-                // email:        // Recommended if using Pendo Feedback, or NPS Email
-                // full_name:    // Recommended if using Pendo Feedback
-                // role:         // Optional
-
-                // You can add any additional visitor level key-values here,
-                // as long as it's not one of the above reserved names.
-              },
-
-              account: {
-                //id:            // Required if using Pendo Feedback
-                // name:         // Optional
-                // is_paying:    // Recommended if using Pendo Feedback
-                // monthly_value:// Recommended if using Pendo Feedback
-                // planLevel:    // Optional
-                // planPrice:    // Optional
-                // creationDate: // Optional
-
-                // You can add any additional account level key-values here,
-                // as long as it's not one of the above reserved names.
-              },
-            });
-    })('010e65dc-ce76-4697-47d6-67e316112fec');
-    </script>
-  <!-- end pendo -->
-
-
-
- </head>
-
- <body>
-  <div id="map"></div>
-  <script>
-/////////////Icons//////////////
-var bookIcon = L.icon({
-      iconUrl: "book.png",
-      iconSize: [45, 48],
-      iconAnchor: [18, 18],
-      popupAnchor: [0, -10],
-      shadowSize: [0, 0],
-      shadowAnchor: [10, 10]
-    });
-
-var weedIcon = L.icon({
-      iconUrl: "weed.png",
-      iconSize: [35, 35],
-      iconAnchor: [18, 18],
-      popupAnchor: [0, -10],
-      shadowSize: [0, 0],
-      shadowAnchor: [10, 10]
-    });
-
-///////////////Bookstores//////////////////
-var theVermontBookShop= L.marker([44.013968999999996, -73.16854099999999],{icon: bookIcon}).bindPopup('The Vermont Book Shop, 38 Main St, Middlebury, VT 05753<br>(802) 388-2061<br>http://vermontbookshop.com/'),
-flyingPigBookstore= L.marker([44.3810941, -73.2270714],{icon: bookIcon}).bindPopup('Flying Pig Bookstore, 5247 Shelburne Rd, Shelburne, VT 05482<br>(802) 985-3999<br>http://www.flyingpigbooks.com/'),
-crowBookshopCrowBooks= L.marker([44.4801159, -73.2126117],{icon: bookIcon}).bindPopup('Crow Bookshop - Crow Books, 14 Church St, Burlington, VT 05401<br>(802) 862-0848<br>http://www.crowbooks.com/'),
-monroeStreetBooks= L.marker([44.0435936, -73.1627106],{icon: bookIcon}).bindPopup('Monroe Street Books, 1485 US-7, Middlebury, VT 05753<br>(802) 398-2200<br>http://www.monroestreetbooks.com/'),
-otterCreekUsedBooks= L.marker([44.015580299999996, -73.1698076],{icon: bookIcon}).bindPopup('Otter Creek Used Books, Historic MarbleWorks, 99 Maple St Suite 12, Middlebury, VT 05753<br>(802) 388-3241<br>https://otter-creek-used-books.business.site/'),
-barnesNoble= L.marker([44.4666698, -73.1808321],{icon: bookIcon}).bindPopup('Barnes & Noble, 102 Dorset St S, South Burlington, VT 05403<br>(802) 864-8001<br>https://stores.barnesandnoble.com/store/2776'),
-phoenixBooksEssex= L.marker([44.508157399999995, -73.0856731],{icon: bookIcon}).bindPopup('Phoenix Books Essex, 2 Carmichael St Suite 2, Essex Junction, VT 05452<br>(802) 872-7111<br>http://phoenixbooks.biz/'),
-bridgesideBooks= L.marker([44.338295099999996, -72.7553571],{icon: bookIcon}).bindPopup('Bridgeside Books, 29 Stowe St #1, Waterbury Village Historic District, VT 05676<br>(802) 244-1441<br>http://www.bridgesidebooks.com/'),
-theBookstore= L.marker([43.7996171, -73.0900393],{icon: bookIcon}).bindPopup('The Bookstore, 8 Conant Square, Brandon, VT 05733<br>(802) 465-8009<br>http://www.thebookstorevt.com/'),
-speakingVolumesBooks= L.marker([44.4687583, -73.2164171],{icon: bookIcon}).bindPopup('Speaking Volumes Books, 377 Pine St, Burlington, VT 05401<br>(802) 540-0107<br>https://www.speakingvolumesvt.com/'),
-nextChapterBookstore= L.marker([44.1969972, -72.5019392],{icon: bookIcon}).bindPopup('Next Chapter Bookstore, 14 N Main St Suite 02, Barre, VT 05641<br>(802) 476-3114<br>http://www.nextchapterbooksvt.com/'),
-champlainCollegeCampusStore= L.marker([44.4736529, -73.20439209999999],{icon: bookIcon}).bindPopup('Champlain College Campus Store, 375 Maple St, Burlington, VT 05401<br>(802) 863-8961<br>http://www.champlain.bkstr.com/'),
-uvmBookstore= L.marker([44.4755186, -73.19623349999999],{icon: bookIcon}).bindPopup('UVM Bookstore, Dudley H. Davis Center, 590 Main St, Burlington, VT 05401<br>(802) 656-3290<br>http://uvmbookstore.uvm.edu/'),
-tempestBookShop= L.marker([44.185154999999995, -72.8345667],{icon: bookIcon}).bindPopup('Tempest Book Shop, 5031 Main St, Waitsfield, VT 05673<br>(802) 496-2022<br>http://tempestbookshop.org/'),
-phoenixBooksRutland= L.marker([43.60633, -72.979289],{icon: bookIcon}).bindPopup('Phoenix Books Rutland, 2 Center St, Rutland, VT 05701<br>(802) 855-8078<br>http://www.phoenixbooks.biz/'),
-bearPondBooksStore= L.marker([44.4652453, -72.6866737],{icon: bookIcon}).bindPopup('Bear Pond Books Store, 38 Main St, Stowe, VT 05672<br>(802) 253-8236<br>https://stowebooks.com/'),
-yankeeBookshop= L.marker([43.625398999999994, -72.517986],{icon: bookIcon}).bindPopup('Yankee Bookshop, 12 Central St, Woodstock, VT 05091<br>(802) 457-2411<br>http://yankeebookshop.com/'),
-theEloquentPage= L.marker([44.81259, -73.08335],{icon: bookIcon}).bindPopup('The Eloquent Page, 70 N Main St, St Albans City, VT 05478<br>(802) 527-7243<br>https://www.theeloquentpage.com/'),
-recycledReadingOfVermontBooksInstruments= L.marker([44.132909999999995, -73.07848],{icon: bookIcon}).bindPopup('Recycled Reading of Vermont Books & Instruments, 1 Main St, Bristol, VT 05443<br>(802) 453-5982<br>http://www.recycledreadingofvt.com/'),
-northshireBookstore= L.marker([43.176772799999995, -73.0571655],{icon: bookIcon}).bindPopup('Northshire Bookstore, 4869 Main St, Manchester Center, VT 05255<br>(802) 362-2200<br>http://www.northshire.com/'),
-uvmBookstore= L.marker([44.4789896, -73.2123838],{icon: bookIcon}).bindPopup('UVM Bookstore, 46 Church St, Burlington, VT 05401<br>(802) 660-0868<br>http://uvmbookstore.uvm.edu/site_catamountstore.asp?'),
-galaxyBookshop= L.marker([44.504005899999996, -72.366985],{icon: bookIcon}).bindPopup('Galaxy Bookshop, 41 S Main St, Hardwick, VT 05843<br>(802) 472-5533<br>https://galaxybookshop.com/'),
-theBookmobile= L.marker([43.606620199999995, -72.9791699],{icon: bookIcon}).bindPopup('The Bookmobile, 17 Center St, Rutland, VT 05701<br>(802) 342-1477<br>http://www.bookmobilevermont.com/'),
-norwichBookstore= L.marker([43.7134904, -72.3085267],{icon: bookIcon}).bindPopup('Norwich Bookstore, 291 Main St, Norwich, VT 05055<br>(802) 649-1114<br>https://www.norwichbookstore.com/'),
-theCountryBookshop= L.marker([44.2771574, -72.4249805],{icon: bookIcon}).bindPopup('The Country Bookshop, 35 Mill St, Plainfield, VT 05667<br>(802) 454-8439<br>https://www.thecountrybookshop.com/'),
-hermitHillBooks= L.marker([43.516832799999996, -73.23470809999999],{icon: bookIcon}).bindPopup('Hermit Hill Books, 95 Main St, Poultney, VT 05764<br>(802) 287-5757<br>http://www.hermithillbooks.com/'),
-starCatBooks= L.marker([43.9943935, -72.1283048],{icon: bookIcon}).bindPopup('Star Cat Books, 157 Main St, Bradford, VT 05033<br>(802) 222-5826<br>http://www.starcatbooks.com/'),
-sandySBooksAndBakery= L.marker([43.875, -72.8080556],{icon: bookIcon}).bindPopup('Sandy\'s Books and Bakery, 30 N Main St, Rochester, VT 05767<br>(802) 767-4258<br>https://www.facebook.com/sandysbooksandbakery/'),
-theBookNook= L.marker([43.395976499999996, -72.6992223],{icon: bookIcon}).bindPopup('The Book Nook, 136 Main St, Ludlow, VT 05149<br>(802) 228-3238<br>http://thebooknookvt.com/'),
-bookLovers= L.marker([42.8516409, -72.559482],{icon: bookIcon}).bindPopup('Book Lovers, 49 Flat St, Brattleboro, VT 05301<br>(802) 257-8010<br>https://www.reformer.com/local-news/a-loving-store-for-used-books/article_f7e40c82-5ba4-11ed-9c38-d70d602f2a61.html'),
-greenMountainBooksPrints= L.marker([44.534397999999996, -72.003084],{icon: bookIcon}).bindPopup('Green Mountain Books & Prints, 1055 Broad St, Lyndonville, VT 05851<br>(802) 626-5051<br>https://www.greenmtnbooks.com/'),
-villageSquareBooksellers= L.marker([43.134071, -72.443933],{icon: bookIcon}).bindPopup('Village Square Booksellers, 32 Square, Bellows Falls, VT 05101<br>(802) 463-9404<br>https://www.villagesquarebooks.com/'),
-bartlebySBooks= L.marker([42.869262899999995, -72.872261],{icon: bookIcon}).bindPopup('Bartleby\'s Books, 17 W Main St, Wilmington, VT 05363<br>(802) 464-5425<br>http://www.myvermontbookstore.com/'),
-barristerSBookshop= L.marker([43.820832499999995, -72.5214154],{icon: bookIcon}).bindPopup('Barrister\'s Bookshop, 190 Chelsea St, South Royalton, VT 05068<br>(802) 763-7170<br>http://barristers.vermontlaw.edu/'),
-benningtonBookshop= L.marker([42.877991, -73.1974178],{icon: bookIcon}).bindPopup('Bennington Bookshop, 109 South St, Bennington, VT 05201<br>(802) 442-5059<br>http://www.benningtonbookshop.com/'),
-boxcarCaboose= L.marker([44.4182601, -72.0155042],{icon: bookIcon}).bindPopup('Boxcar & Caboose, 394 Railroad St # 1, St Johnsbury, VT 05819<br>(802) 748-3551<br>https://boxcarandcaboose.com/'),
-whiteFoxRareBooksAndAntiques= L.marker([43.489470999999995, -72.493881],{icon: bookIcon}).bindPopup('White Fox Rare Books and Antiques, 974 Cemetery Rd, West Windsor, VT 05089<br>(802) 291-4113<br>http://www.whitefoxrarebooks.com/'),
-middleburyCollegeStore= L.marker([44.0090639, -73.1798455],{icon: bookIcon}).bindPopup('Middlebury College Store, 58 Hepburn Rd, Middlebury, VT 05753<br>(802) 443-5334<br>http://bookstore.middlebury.edu/'),
-theBookShop= L.marker([43.9231614, -72.6639138],{icon: bookIcon}).bindPopup('The Book Shop, 28 Pleasant St, Randolph, VT 05060<br>(802) 728-5073<br>https://kimballlibrary.org/the-book-shop'),
-everyoneSBooks= L.marker([42.8521667, -72.5588915],{icon: bookIcon}).bindPopup('Everyone\'s Books, 25 Elliot St, Brattleboro, VT 05301<br>(802) 254-8160<br>http://www.everyonesbks.com/'),
-archBridgeBookshop= L.marker([43.1343387, -72.4442488],{icon: bookIcon}).bindPopup('Arch Bridge Bookshop, 14 Square, Bellows Falls, VT 05101<br>(802) 463-2098<br>http://www.vermontisbookcountry.com/member/arch-bridge-bookshop/'),
-bearPondBooks= L.marker([44.2598999, -72.57530609999999],{icon: bookIcon}).bindPopup('Bear Pond Books, 77 Main St, Montpelier, VT 05602<br>(802) 229-0774<br>http://www.bearpondbooks.com/'),
-antidoteBooks= L.marker([42.8563031, -72.559783],{icon: bookIcon}).bindPopup('Antidote Books, 15 Putney Rd, Brattleboro, VT 05301<br>(802) 387-2260<br>http://antidotebooks.com/'),
-nevermoreBookstore= L.marker([44.942564399999995, -72.2019174],{icon: bookIcon}).bindPopup('Nevermore Bookstore, 100 E Main St, Newport, VT 05855<br>(717) 468-0857<br>https://m.facebook.com/NevermoreBookstore/'),
-catamountBooks= L.marker([43.0602242, -73.1431357],{icon: bookIcon}).bindPopup('Catamount Books, 198 Pleasant St, Arlington, VT 05250<br>(802) 282-9769<br>https://www.facebook.com/CatamountBooksVT'),
-secondHandProse= L.marker([44.4191323, -72.02065209999999],{icon: bookIcon}).bindPopup('Second Hand Prose, 1222 Main St #101, St Johnsbury, VT 05819<br>(802) 748-9222<br>https://www.stjathenaeum.org/secondhand-prose-1'),
-theBookGarden= L.marker([44.2603011, -72.5767533],{icon: bookIcon}).bindPopup('The Book Garden, 50 State St, Montpelier, VT 05602<br>(802) 229-9999<br>http://vtbookgarden.com/'),
-earthPrimeComics= L.marker([44.4761747, -73.2123605],{icon: bookIcon}).bindPopup('Earth Prime Comics, 154 Church St, Burlington, VT 05401<br>(802) 860-0581<br>https://www.facebook.com/pages/Earth-Prime-Comics/100881886623776'),
-brattleboroBooks= L.marker([42.851847199999995, -72.5588389],{icon: bookIcon}).bindPopup('Brattleboro Books, 36 Elliot St, Brattleboro, VT 05301<br>(802) 257-7777<br>http://brattleborobooks.com/'),
-norwichUniversityBookstore= L.marker([44.1384348, -72.6589372],{icon: bookIcon}).bindPopup('Norwich University Bookstore, Harmon Hall, 158 Harmon Dr, Northfield, VT 05663<br>(802) 485-2200<br>https://www.bkstr.com/norwichustore/home'),
-phoenixBooksBurlington= L.marker([44.4781155, -73.2117383],{icon: bookIcon}).bindPopup('Phoenix Books Burlington, 191 Bank St, Burlington, VT 05401<br>(802) 448-3350<br>http://phoenixbooks.biz/');
-
-///////////Dispensaries////////////
-ceresmed= L.marker([44.4558422, -73.13938279999999],{icon: weedIcon}).bindPopup('CeresMED, 2 Green Tree Dr, South Burlington, VT 05403<br>(844) 283-9333<br>http://www.ceresvt.com/'),
-greenLeafCentral= L.marker([44.476723, -73.21182499999999],{icon: weedIcon}).bindPopup('Green Leaf Central, 30 Thorsen Way, Burlington, VT 05401<br>(802) 862-3900<br>http://greenleafcentral.com/'),
-magicMann= L.marker([44.506188599999994, -73.0811561],{icon: weedIcon}).bindPopup('Magic Mann, 21 Essex Way Suite 216, Essex Junction, VT 05452<br>(802) 871-5810<br>https://magicmann.com/'),
-ninthStateCannabis= L.marker([44.253297599999996, -73.2271366],{icon: weedIcon}).bindPopup('9th State Cannabis, 6560 US-7, North Ferrisburgh, VT 05473<br>(802) 539-2065<br>http://www.9thstatevt.com/'),
-floraCannabis= L.marker([44.0126786, -73.1698017],{icon: weedIcon}).bindPopup('FLŌRA Cannabis, 2 Park St, Middlebury, VT 05753<br>(802) 989-7948<br>http://www.floravt.com/'),
-blueSageTheValleyDispensary= L.marker([44.184112999999996, -72.835117],{icon: weedIcon}).bindPopup('Blue Sage - The Valley Dispensary, 5121 Main St, Waitsfield, VT 05673<br>(802) 583-2193<br>http://www.bluesagevt.com/'),
-ceresmedSouth= L.marker([43.988916599999996, -73.135965],{icon: weedIcon}).bindPopup('CeresMED South, 1641 US-7, Middlebury, VT 05753<br>(844) 283-9333<br>http://www.ceresmedvt.com/'),
-greenStateDispensary= L.marker([44.4602295, -73.2149393],{icon: weedIcon}).bindPopup('Green State Dispensary, 699 Pine St Suite C, Burlington, VT 05401<br>(802) 540-1168<br>https://greenstatedispensary.com/?utm_source=google&utm_medium=organic&utm_campaign=business_listing'),
-valleyMeadeDispensary= L.marker([44.1815946, -72.84054979999999],{icon: weedIcon}).bindPopup('Valley Meade Dispensary, 8 VT-17, Waitsfield, VT 05673<br>(802) 496-5344<br>http://valleymeade.com/'),
-ceresCollaborative= L.marker([44.4772144, -73.2121433],{icon: weedIcon}).bindPopup('Ceres Collaborative, 190 College St, Burlington, VT 05401<br>(802) 404-5420<br>http://ceresvt.com/'),
-floatOnDispensary= L.marker([44.476526, -73.21230899999999],{icon: weedIcon}).bindPopup('Float On Dispensary, 136 1/2 Church St, Burlington, VT 05401<br>(802) 540-1234<br>https://www.floatondispensary.com/'),
-gramCentralDispensary= L.marker([44.2492095, -72.5624093],{icon: weedIcon}).bindPopup('Gram Central Dispensary, 120 River St, Montpelier, VT 05602<br>(802) 262-1701<br>http://www.gramcentral.com/'),
-pineGroveOrganicsDispensary= L.marker([43.8040405, -73.0970864],{icon: weedIcon}).bindPopup('Pine Grove Organics - Dispensary, 335 Grove St, Brandon, VT 05733<br>(802) 265-0136<br>http://www.pinegroveorganics.org/'),
-zenbarnFarms= L.marker([44.3589895, -72.7323718],{icon: weedIcon}).bindPopup('Zenbarn Farms, 1930 Waterbury-Stowe Rd, Waterbury Center, VT 05677<br>(802) 244-8134<br>https://zenbarnmj.com/'),
-lamoilleCountyCannabisDispensary= L.marker([44.5738609, -72.5955594],{icon: weedIcon}).bindPopup('Lamoille County Cannabis Dispensary, 76 Stafford Ave, Morristown, VT 05661<br>(802) 851-8352<br>https://lamoillecountycannabis.com/'),
-cloudNineCannabisDispensary= L.marker([43.5932105, -73.26524839999999],{icon: weedIcon}).bindPopup('Cloud Nine Cannabis Dispensary, 87 Main St, Fair Haven, VT 05743<br>(802) 278-8690<br>https://www.cloud9vt.com/'),
-cambridgeCannabisCompany= L.marker([44.643704299999996, -72.833254],{icon: weedIcon}).bindPopup('Cambridge Cannabis Company, 185 Church St, Cambridge, VT 05464<br>(802) 899-0468<br>https://cambridgecannabiscompany.com/'),
-capitalCannabisCompany= L.marker([44.2170421, -72.5649397],{icon: weedIcon}).bindPopup('Capital Cannabis Company, next to Walmart, 282 Berlin Mall Rd, Berlin, VT 05602<br>(802) 505-5663<br>http://www.capitalcannabisvt.com/'),
-theHerbCloset= L.marker([44.4806484, -73.2109151],{icon: weedIcon}).bindPopup('The Herb Closet, 196 Pearl St, Burlington, VT 05401<br>(802) 409-3969<br>http://www.theherbclosetvt.com/'),
-grassQueen= L.marker([44.4782211, -73.20968839999999],{icon: weedIcon}).bindPopup('Grass Queen, 71 S Union St, Burlington, VT 05401<br>(802) 399-2485<br>https://grassqueenvt.com/'),
-winooskiOrganics= L.marker([44.4923362, -73.18021999999999],{icon: weedIcon}).bindPopup('Winooski Organics, 165 E Allen St, Winooski, VT 05404<br>(802) 899-9333<br>http://www.winooskiorganics.com/'),
-bernGalleryDispensary= L.marker([44.4756437, -73.2135046],{icon: weedIcon}).bindPopup('Bern Gallery Dispensary, 135 Main St, Burlington, VT 05401<br>(802) 865-0994<br>http://www.berngallerydispensary.com/'),
-theGasStationDispensary= L.marker([43.596252899999996, -72.969588],{icon: weedIcon}).bindPopup('The Gas Station Dispensary, 180 S Main St, Rutland, VT 05701<br>(802) 855-8357<br>http://gasstationvt.com/'),
-euphoriaCannabis= L.marker([44.4891547, -73.2256797],{icon: weedIcon}).bindPopup('Euphoria Cannabis, 276 North Ave, Burlington, VT 05401<br>(802) 343-7770<br>https://euphoriavt.com/'),
-vermontTrapHouse= L.marker([43.592619, -73.264905],{icon: weedIcon}).bindPopup('Vermont Trap House, 41 Main St, Fair Haven, VT 05743<br>(802) 287-0297<br>http://vermonttraphouse.com/'),
-eponaFarmsStoreDispensary= L.marker([43.7861694, -73.06653969999999],{icon: weedIcon}).bindPopup('Epona Farms Store - Dispensary, 1410 Franklin St, Brandon, VT 05733<br>(802) 736-6287<br>http://www.eponafarms.org/'),
-goodfireDispensary= L.marker([44.3815734, -72.72100329999999],{icon: weedIcon}).bindPopup('GoodFire Dispensary, 3627 Waterbury-Stowe Rd, Waterbury Center, VT 05677<br>(802) 224-8888<br>https://goodfirevt.com/'),
-greenUnionDispensary= L.marker([43.530279, -72.7378627],{icon: weedIcon}).bindPopup('Green Union Dispensary, 4738 VT-100A, Plymouth, VT 05056<br>(802) 672-1000<br>http://www.greenunionvt.com/'),
-NorthDispensary= L.marker([44.3692122, -72.7286677],{icon: weedIcon}).bindPopup('31 North Dispensary, 2653 Waterbury-Stowe Rd, Waterbury, VT 05677<br>(802) 560-7927<br>https://www.31northvt.com/'),
-wildLegacyCannabis= L.marker([44.5640097, -72.5980189],{icon: weedIcon}).bindPopup('Wild Legacy Cannabis, 10 Railroad St, Morristown, VT 05661<br>(802) 851-8735<br>http://www.wildlegacycannabis.com/'),
-sundayDriveDispensary= L.marker([43.6326633, -72.5038905],{icon: weedIcon}).bindPopup('Sunday Drive Dispensary, 442 Woodstock Rd Suite 3A, Woodstock, VT 05091<br>(802) 332-0049<br>http://www.vtsundaydrive.com/'),
-silverTherapeuticsCannabisDispensaryBennington= L.marker([42.8987621, -73.2085799],{icon: weedIcon}).bindPopup('Silver Therapeutics Cannabis Dispensary Bennington, 201 Northside Dr, Bennington, VT 05201<br>(802) 440-5170<br>https://silver-therapeutics.com/location/recreational-cannabis-dispensary-bennington-vt-05201/'),
-mountainGirlCannabis= L.marker([43.6074335, -72.9822289],{icon: weedIcon}).bindPopup('Mountain Girl Cannabis, 174 West St, Rutland, VT 05701<br>(802) 353-0034<br>http://www.mountaingirlcannabis.com/'),
-somewhereOnTheMountain= L.marker([43.6192967, -72.9739914],{icon: weedIcon}).bindPopup('Somewhere On The Mountain, 158 N Main St, Rutland, VT 05701<br>(802) 776-4447<br>http://www.somewhereonthemountain.com/'),
-theoryWellnessBrattleboroRecreationalCannabisDispensary= L.marker([42.8743815, -72.56132099999999],{icon: weedIcon}).bindPopup('Theory Wellness: Brattleboro Recreational Cannabis Dispensary, 768 Putney Rd, Brattleboro, VT 05301<br>(802) 454-3480<br>https://theorywellness.org/vermont-dispensary/brattleboro-recreational-cannabis-dispensary/'),
-polestarCannabis= L.marker([43.923732, -72.663884],{icon: weedIcon}).bindPopup('Polestar Cannabis, 24 Pleasant St, Randolph, VT 05060<br>(802) 565-5168<br>http://www.polestarvt.com/'),
-ratuSCannabisSupplyLlcAdultUseCannabisStore= L.marker([42.869735999999996, -72.87393999999999],{icon: weedIcon}).bindPopup('Ratu\'s Cannabis Supply, LLC Adult-use Cannabis store, 36 W Main St, Wilmington, VT 05363<br>(802) 464-1390<br>http://ratuscannabis.com/'),
-theTeaHouse= L.marker([43.652607599999996, -72.3308835],{icon: weedIcon}).bindPopup('The Tea House, 50 Woodstock Rd, White River Junction, VT 05001<br>(802) 332-6043<br>http://teahousevt.com/'),
-maryJaneMountainVermont= L.marker([44.8779226, -72.60942659999999],{icon: weedIcon}).bindPopup('Mary Jane Mountain Vermont, 91 Main St, Montgomery Center, VT 05471<br>(802) 326-2006<br>https://www.leafly.com/dispensary-info/mary-jane-mountain'),
-mothaplantDispensary= L.marker([44.841947999999995, -73.0800059],{icon: weedIcon}).bindPopup('MothaPlant Dispensary, 319 Swanton Rd, St Albans City, VT 05478<br>(802) 782-8623<br>http://mothaplant.com/'),
-higherElevation= L.marker([44.572117999999996, -72.593807],{icon: weedIcon}).bindPopup('Higher Elevation, 65 Northgate Ave Suite 6, Morrisville, VT 05661<br>(802) 200-2937<br>https://higherelevationvt.com/'),
-vermontBudBarn= L.marker([42.8660254, -72.6132227],{icon: weedIcon}).bindPopup('Vermont Bud Barn, 257 Marlboro Rd Suite 101, Brattleboro, VT 05301<br>(802) 246-4367<br>https://vtbudbarn.com/'),
-forbinsReserveForbinsfinestCultivation= L.marker([44.198350399999995, -72.50477409999999],{icon: weedIcon}).bindPopup('Forbins Reserve + ForbinsFinest Cultivation, 21 Metro Way Unit 8, Barre, VT 05641<br>(802) 622-0359<br>https://forbinsfinest.com/forbins-reserve/'),
-littleCityGreens= L.marker([44.1675354, -73.2513821],{icon: weedIcon}).bindPopup('Little City Greens, 7 N Green St Suite 2, Vergennes, VT 05491<br>(802) 870-7729<br>https://www.littlecitygreens.com/'),
-givingTreeCannabisVermontCraftDispensary= L.marker([43.4048076, -73.24449129999999],{icon: weedIcon}).bindPopup('Giving Tree Cannabis Vermont Craft Dispensary, 946 VT-149, Pawlet, VT 05775<br>(802) 384-4183<br>http://givingtreecannabis.com/'),
-theGreenMan= L.marker([44.4553258, -72.0165595],{icon: weedIcon}).bindPopup('The Green Man, 1591 Memorial Dr, St Johnsbury, VT 05819<br>(802) 535-0669<br>http://www.thegreenmancannabis.com/'),
-theHighCountryLlc= L.marker([44.9484589, -72.1700602],{icon: weedIcon}).bindPopup('The High Country LLC, 5134 US-5, Derby, VT 05829<br>(802) 487-9675<br>http://thehighcountry.us/'),
-stoneLeafCannabis= L.marker([43.5132098, -72.4026509],{icon: weedIcon}).bindPopup('Stone Leaf Cannabis, 71 Artisans Way, Windsor, VT 05089<br>(802) 674-4674<br>http://www.stoneleafvt.com/'),
-depotShop= L.marker([43.4804241, -72.38498779999999],{icon: weedIcon}).bindPopup('DePot Shop, 25 Depot Ave, Windsor, VT 05089<br><br>http://www.depotshopvt.com/'),
-theDankClosetDispensary= L.marker([44.787608299999995, -72.2136338],{icon: weedIcon}).bindPopup('The Dank Closet Dispensary, 3098 Barton Orleans Rd, Barton, VT 05860<br><br>https://dankcloset.com/'),
-kingdomKind= L.marker([44.744267099999995, -72.18134599999999],{icon: weedIcon}).bindPopup('Kingdom Kind, 290 Glover Rd, Barton, VT 05822<br>(802) 243-4367<br>https://nekkind.com/'),
-northeastKannabis= L.marker([44.414957199999996, -72.0163014],{icon: weedIcon}).bindPopup('Northeast Kannabis, 166 Railroad St, St Johnsbury, VT 05819<br>(802) 424-1760<br>http://northeastkannabis.com/'),
-trueCannabis= L.marker([44.476769, -73.212334],{icon: weedIcon}).bindPopup('True 802 Cannabis, 132 Church St, Burlington, VT 05401<br>(802) 540-1420<br>http://www.true802cannabis.com/'),
-cannabisMaximus= L.marker([42.8744308, -72.5593248],{icon: weedIcon}).bindPopup('Cannabis Maximus, 725 Putney Rd, Brattleboro, VT 05301<br>(802) 490-2253<br>http://www.cannmaxx.com/'),
-juniperLane= L.marker([42.878082899999995, -73.1957887],{icon: weedIcon}).bindPopup('Juniper Lane, 445 Main St, Bennington, VT 05201<br>(802) 440-5755<br>http://juniperlanecannabis.com/');
-
-
-///////////Layers////////////
-var bookstores = L.layerGroup([theVermontBookShop,
-flyingPigBookstore,
-crowBookshopCrowBooks,
-monroeStreetBooks,
-otterCreekUsedBooks,
-barnesNoble,
-phoenixBooksEssex,
-bridgesideBooks,
-theBookstore,
-speakingVolumesBooks,
-nextChapterBookstore,
-champlainCollegeCampusStore,
-uvmBookstore,
-tempestBookShop,
-phoenixBooksRutland,
-bearPondBooksStore,
-yankeeBookshop,
-theEloquentPage,
-recycledReadingOfVermontBooksInstruments,
-northshireBookstore,
-uvmBookstore,
-galaxyBookshop,
-theBookmobile,
-norwichBookstore,
-theCountryBookshop,
-hermitHillBooks,
-starCatBooks,
-sandySBooksAndBakery,
-theBookNook,
-bookLovers,
-greenMountainBooksPrints,
-villageSquareBooksellers,
-bartlebySBooks,
-barristerSBookshop,
-benningtonBookshop,
-boxcarCaboose,
-whiteFoxRareBooksAndAntiques,
-middleburyCollegeStore,
-theBookShop,
-everyoneSBooks,
-archBridgeBookshop,
-bearPondBooks,
-antidoteBooks,
-nevermoreBookstore,
-catamountBooks,
-secondHandProse,
-theBookGarden,
-earthPrimeComics,
-brattleboroBooks,
-norwichUniversityBookstore,
-phoenixBooksBurlington]);
-
-var dispensaries = L.layerGroup([
-ceresmed,
-greenLeafCentral,
-magicMann,
-ninthStateCannabis,
-floraCannabis,
-blueSageTheValleyDispensary,
-ceresmedSouth,
-greenStateDispensary,
-valleyMeadeDispensary,
-ceresCollaborative,
-floatOnDispensary,
-gramCentralDispensary,
-pineGroveOrganicsDispensary,
-zenbarnFarms,
-lamoilleCountyCannabisDispensary,
-cloudNineCannabisDispensary,
-cambridgeCannabisCompany,
-capitalCannabisCompany,
-theHerbCloset,
-grassQueen,
-winooskiOrganics,
-bernGalleryDispensary,
-theGasStationDispensary,
-euphoriaCannabis,
-vermontTrapHouse,
-eponaFarmsStoreDispensary,
-goodfireDispensary,
-greenUnionDispensary,
-NorthDispensary,
-wildLegacyCannabis,
-sundayDriveDispensary,
-silverTherapeuticsCannabisDispensaryBennington,
-mountainGirlCannabis,
-somewhereOnTheMountain,
-theoryWellnessBrattleboroRecreationalCannabisDispensary,
-polestarCannabis,
-ratuSCannabisSupplyLlcAdultUseCannabisStore,
-theTeaHouse,
-maryJaneMountainVermont,
-mothaplantDispensary,
-higherElevation,
-vermontBudBarn,
-forbinsReserveForbinsfinestCultivation,
-littleCityGreens,
-givingTreeCannabisVermontCraftDispensary,
-theGreenMan,
-theHighCountryLlc,
-stoneLeafCannabis,
-depotShop,
-theDankClosetDispensary,
-kingdomKind,
-northeastKannabis,
-trueCannabis,
-cannabisMaximus,
-juniperLane,
-	]);
-
-  var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
-})
-
-///////////Maps///////////////////
-   var map = L.map('map',{
-   	center: [44.00, -72.42],
-    zoom: 8,
-    layers: [osm, bookstores, dispensaries]
-});
-
-   var baseMaps = {
-    "OpenStreetMap": osm
-};
-
-var overlayMaps = {
-    "Bookstores": bookstores,
-    "Dispensaries" : dispensaries
-};
-
-
-var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
-
-</script>
- </body>
-
+   <head>
+      <title>Mapley Map of Vermonty Stuff</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+      <link 
+         rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+      <script
+         src="https://code.jquery.com/jquery-3.7.0.min.js"
+         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+         crossorigin="anonymous"></script>
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+      <script data-goatcounter="https://maplemetrics.goatcounter.com/count"
+         async src="//gc.zgo.at/count.js"></script> <!--https://www.goatcounter.com/ does not track personal data, just visits!-->
+      <!-- Pendo -->
+      <script>
+         (function(apiKey){
+             (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+             v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+                 o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+                 y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+                 z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+                 userID = 'carson-test';
+         
+                 pendo.initialize({
+                   visitor: {
+                     id:              userID,   // Required if user is logged in
+                     // email:        // Recommended if using Pendo Feedback, or NPS Email
+                     // full_name:    // Recommended if using Pendo Feedback
+                     // role:         // Optional
+         
+                     // You can add any additional visitor level key-values here,
+                     // as long as it's not one of the above reserved names.
+                   },
+         
+                   account: {
+                     //id:            // Required if using Pendo Feedback
+                     // name:         // Optional
+                     // is_paying:    // Recommended if using Pendo Feedback
+                     // monthly_value:// Recommended if using Pendo Feedback
+                     // planLevel:    // Optional
+                     // planPrice:    // Optional
+                     // creationDate: // Optional
+         
+                     // You can add any additional account level key-values here,
+                     // as long as it's not one of the above reserved names.
+                   },
+                 });
+         })('010e65dc-ce76-4697-47d6-67e316112fec');
+      </script>
+      <!-- end pendo -->
+   </head>
+   <body>
+      <div id="map"></div>
+      <script>
+         /////////////Icons//////////////
+         var bookIcon = L.icon({
+               iconUrl: "book.png",
+               iconSize: [45, 48],
+               iconAnchor: [18, 18],
+               popupAnchor: [0, -10],
+               shadowSize: [0, 0],
+               shadowAnchor: [10, 10]
+             });
+         
+         var weedIcon = L.icon({
+               iconUrl: "weed.png",
+               iconSize: [35, 35],
+               iconAnchor: [18, 18],
+               popupAnchor: [0, -10],
+               shadowSize: [0, 0],
+               shadowAnchor: [10, 10]
+             });
+         
+         ///////////////Bookstores//////////////////
+         var theVermontBookShop= L.marker([44.013968999999996, -73.16854099999999],{icon: bookIcon}).bindPopup('The Vermont Book Shop, 38 Main St, Middlebury, VT 05753<br>(802) 388-2061<br>http://vermontbookshop.com/'),
+         flyingPigBookstore= L.marker([44.3810941, -73.2270714],{icon: bookIcon}).bindPopup('Flying Pig Bookstore, 5247 Shelburne Rd, Shelburne, VT 05482<br>(802) 985-3999<br>http://www.flyingpigbooks.com/'),
+         crowBookshopCrowBooks= L.marker([44.4801159, -73.2126117],{icon: bookIcon}).bindPopup('Crow Bookshop - Crow Books, 14 Church St, Burlington, VT 05401<br>(802) 862-0848<br>http://www.crowbooks.com/'),
+         monroeStreetBooks= L.marker([44.0435936, -73.1627106],{icon: bookIcon}).bindPopup('Monroe Street Books, 1485 US-7, Middlebury, VT 05753<br>(802) 398-2200<br>http://www.monroestreetbooks.com/'),
+         otterCreekUsedBooks= L.marker([44.015580299999996, -73.1698076],{icon: bookIcon}).bindPopup('Otter Creek Used Books, Historic MarbleWorks, 99 Maple St Suite 12, Middlebury, VT 05753<br>(802) 388-3241<br>https://otter-creek-used-books.business.site/'),
+         barnesNoble= L.marker([44.4666698, -73.1808321],{icon: bookIcon}).bindPopup('Barnes & Noble, 102 Dorset St S, South Burlington, VT 05403<br>(802) 864-8001<br>https://stores.barnesandnoble.com/store/2776'),
+         phoenixBooksEssex= L.marker([44.508157399999995, -73.0856731],{icon: bookIcon}).bindPopup('Phoenix Books Essex, 2 Carmichael St Suite 2, Essex Junction, VT 05452<br>(802) 872-7111<br>http://phoenixbooks.biz/'),
+         bridgesideBooks= L.marker([44.338295099999996, -72.7553571],{icon: bookIcon}).bindPopup('Bridgeside Books, 29 Stowe St #1, Waterbury Village Historic District, VT 05676<br>(802) 244-1441<br>http://www.bridgesidebooks.com/'),
+         theBookstore= L.marker([43.7996171, -73.0900393],{icon: bookIcon}).bindPopup('The Bookstore, 8 Conant Square, Brandon, VT 05733<br>(802) 465-8009<br>http://www.thebookstorevt.com/'),
+         speakingVolumesBooks= L.marker([44.4687583, -73.2164171],{icon: bookIcon}).bindPopup('Speaking Volumes Books, 377 Pine St, Burlington, VT 05401<br>(802) 540-0107<br>https://www.speakingvolumesvt.com/'),
+         nextChapterBookstore= L.marker([44.1969972, -72.5019392],{icon: bookIcon}).bindPopup('Next Chapter Bookstore, 14 N Main St Suite 02, Barre, VT 05641<br>(802) 476-3114<br>http://www.nextchapterbooksvt.com/'),
+         champlainCollegeCampusStore= L.marker([44.4736529, -73.20439209999999],{icon: bookIcon}).bindPopup('Champlain College Campus Store, 375 Maple St, Burlington, VT 05401<br>(802) 863-8961<br>http://www.champlain.bkstr.com/'),
+         uvmBookstore= L.marker([44.4755186, -73.19623349999999],{icon: bookIcon}).bindPopup('UVM Bookstore, Dudley H. Davis Center, 590 Main St, Burlington, VT 05401<br>(802) 656-3290<br>http://uvmbookstore.uvm.edu/'),
+         tempestBookShop= L.marker([44.185154999999995, -72.8345667],{icon: bookIcon}).bindPopup('Tempest Book Shop, 5031 Main St, Waitsfield, VT 05673<br>(802) 496-2022<br>http://tempestbookshop.org/'),
+         phoenixBooksRutland= L.marker([43.60633, -72.979289],{icon: bookIcon}).bindPopup('Phoenix Books Rutland, 2 Center St, Rutland, VT 05701<br>(802) 855-8078<br>http://www.phoenixbooks.biz/'),
+         bearPondBooksStore= L.marker([44.4652453, -72.6866737],{icon: bookIcon}).bindPopup('Bear Pond Books Store, 38 Main St, Stowe, VT 05672<br>(802) 253-8236<br>https://stowebooks.com/'),
+         yankeeBookshop= L.marker([43.625398999999994, -72.517986],{icon: bookIcon}).bindPopup('Yankee Bookshop, 12 Central St, Woodstock, VT 05091<br>(802) 457-2411<br>http://yankeebookshop.com/'),
+         theEloquentPage= L.marker([44.81259, -73.08335],{icon: bookIcon}).bindPopup('The Eloquent Page, 70 N Main St, St Albans City, VT 05478<br>(802) 527-7243<br>https://www.theeloquentpage.com/'),
+         recycledReadingOfVermontBooksInstruments= L.marker([44.132909999999995, -73.07848],{icon: bookIcon}).bindPopup('Recycled Reading of Vermont Books & Instruments, 1 Main St, Bristol, VT 05443<br>(802) 453-5982<br>http://www.recycledreadingofvt.com/'),
+         northshireBookstore= L.marker([43.176772799999995, -73.0571655],{icon: bookIcon}).bindPopup('Northshire Bookstore, 4869 Main St, Manchester Center, VT 05255<br>(802) 362-2200<br>http://www.northshire.com/'),
+         uvmBookstore= L.marker([44.4789896, -73.2123838],{icon: bookIcon}).bindPopup('UVM Bookstore, 46 Church St, Burlington, VT 05401<br>(802) 660-0868<br>http://uvmbookstore.uvm.edu/site_catamountstore.asp?'),
+         galaxyBookshop= L.marker([44.504005899999996, -72.366985],{icon: bookIcon}).bindPopup('Galaxy Bookshop, 41 S Main St, Hardwick, VT 05843<br>(802) 472-5533<br>https://galaxybookshop.com/'),
+         theBookmobile= L.marker([43.606620199999995, -72.9791699],{icon: bookIcon}).bindPopup('The Bookmobile, 17 Center St, Rutland, VT 05701<br>(802) 342-1477<br>http://www.bookmobilevermont.com/'),
+         norwichBookstore= L.marker([43.7134904, -72.3085267],{icon: bookIcon}).bindPopup('Norwich Bookstore, 291 Main St, Norwich, VT 05055<br>(802) 649-1114<br>https://www.norwichbookstore.com/'),
+         theCountryBookshop= L.marker([44.2771574, -72.4249805],{icon: bookIcon}).bindPopup('The Country Bookshop, 35 Mill St, Plainfield, VT 05667<br>(802) 454-8439<br>https://www.thecountrybookshop.com/'),
+         hermitHillBooks= L.marker([43.516832799999996, -73.23470809999999],{icon: bookIcon}).bindPopup('Hermit Hill Books, 95 Main St, Poultney, VT 05764<br>(802) 287-5757<br>http://www.hermithillbooks.com/'),
+         starCatBooks= L.marker([43.9943935, -72.1283048],{icon: bookIcon}).bindPopup('Star Cat Books, 157 Main St, Bradford, VT 05033<br>(802) 222-5826<br>http://www.starcatbooks.com/'),
+         sandySBooksAndBakery= L.marker([43.875, -72.8080556],{icon: bookIcon}).bindPopup('Sandy\'s Books and Bakery, 30 N Main St, Rochester, VT 05767<br>(802) 767-4258<br>https://www.facebook.com/sandysbooksandbakery/'),
+         theBookNook= L.marker([43.395976499999996, -72.6992223],{icon: bookIcon}).bindPopup('The Book Nook, 136 Main St, Ludlow, VT 05149<br>(802) 228-3238<br>http://thebooknookvt.com/'),
+         bookLovers= L.marker([42.8516409, -72.559482],{icon: bookIcon}).bindPopup('Book Lovers, 49 Flat St, Brattleboro, VT 05301<br>(802) 257-8010<br>https://www.reformer.com/local-news/a-loving-store-for-used-books/article_f7e40c82-5ba4-11ed-9c38-d70d602f2a61.html'),
+         greenMountainBooksPrints= L.marker([44.534397999999996, -72.003084],{icon: bookIcon}).bindPopup('Green Mountain Books & Prints, 1055 Broad St, Lyndonville, VT 05851<br>(802) 626-5051<br>https://www.greenmtnbooks.com/'),
+         villageSquareBooksellers= L.marker([43.134071, -72.443933],{icon: bookIcon}).bindPopup('Village Square Booksellers, 32 Square, Bellows Falls, VT 05101<br>(802) 463-9404<br>https://www.villagesquarebooks.com/'),
+         bartlebySBooks= L.marker([42.869262899999995, -72.872261],{icon: bookIcon}).bindPopup('Bartleby\'s Books, 17 W Main St, Wilmington, VT 05363<br>(802) 464-5425<br>http://www.myvermontbookstore.com/'),
+         barristerSBookshop= L.marker([43.820832499999995, -72.5214154],{icon: bookIcon}).bindPopup('Barrister\'s Bookshop, 190 Chelsea St, South Royalton, VT 05068<br>(802) 763-7170<br>http://barristers.vermontlaw.edu/'),
+         benningtonBookshop= L.marker([42.877991, -73.1974178],{icon: bookIcon}).bindPopup('Bennington Bookshop, 109 South St, Bennington, VT 05201<br>(802) 442-5059<br>http://www.benningtonbookshop.com/'),
+         boxcarCaboose= L.marker([44.4182601, -72.0155042],{icon: bookIcon}).bindPopup('Boxcar & Caboose, 394 Railroad St # 1, St Johnsbury, VT 05819<br>(802) 748-3551<br>https://boxcarandcaboose.com/'),
+         whiteFoxRareBooksAndAntiques= L.marker([43.489470999999995, -72.493881],{icon: bookIcon}).bindPopup('White Fox Rare Books and Antiques, 974 Cemetery Rd, West Windsor, VT 05089<br>(802) 291-4113<br>http://www.whitefoxrarebooks.com/'),
+         middleburyCollegeStore= L.marker([44.0090639, -73.1798455],{icon: bookIcon}).bindPopup('Middlebury College Store, 58 Hepburn Rd, Middlebury, VT 05753<br>(802) 443-5334<br>http://bookstore.middlebury.edu/'),
+         theBookShop= L.marker([43.9231614, -72.6639138],{icon: bookIcon}).bindPopup('The Book Shop, 28 Pleasant St, Randolph, VT 05060<br>(802) 728-5073<br>https://kimballlibrary.org/the-book-shop'),
+         everyoneSBooks= L.marker([42.8521667, -72.5588915],{icon: bookIcon}).bindPopup('Everyone\'s Books, 25 Elliot St, Brattleboro, VT 05301<br>(802) 254-8160<br>http://www.everyonesbks.com/'),
+         archBridgeBookshop= L.marker([43.1343387, -72.4442488],{icon: bookIcon}).bindPopup('Arch Bridge Bookshop, 14 Square, Bellows Falls, VT 05101<br>(802) 463-2098<br>http://www.vermontisbookcountry.com/member/arch-bridge-bookshop/'),
+         bearPondBooks= L.marker([44.2598999, -72.57530609999999],{icon: bookIcon}).bindPopup('Bear Pond Books, 77 Main St, Montpelier, VT 05602<br>(802) 229-0774<br>http://www.bearpondbooks.com/'),
+         antidoteBooks= L.marker([42.8563031, -72.559783],{icon: bookIcon}).bindPopup('Antidote Books, 15 Putney Rd, Brattleboro, VT 05301<br>(802) 387-2260<br>http://antidotebooks.com/'),
+         nevermoreBookstore= L.marker([44.942564399999995, -72.2019174],{icon: bookIcon}).bindPopup('Nevermore Bookstore, 100 E Main St, Newport, VT 05855<br>(717) 468-0857<br>https://m.facebook.com/NevermoreBookstore/'),
+         catamountBooks= L.marker([43.0602242, -73.1431357],{icon: bookIcon}).bindPopup('Catamount Books, 198 Pleasant St, Arlington, VT 05250<br>(802) 282-9769<br>https://www.facebook.com/CatamountBooksVT'),
+         secondHandProse= L.marker([44.4191323, -72.02065209999999],{icon: bookIcon}).bindPopup('Second Hand Prose, 1222 Main St #101, St Johnsbury, VT 05819<br>(802) 748-9222<br>https://www.stjathenaeum.org/secondhand-prose-1'),
+         theBookGarden= L.marker([44.2603011, -72.5767533],{icon: bookIcon}).bindPopup('The Book Garden, 50 State St, Montpelier, VT 05602<br>(802) 229-9999<br>http://vtbookgarden.com/'),
+         earthPrimeComics= L.marker([44.4761747, -73.2123605],{icon: bookIcon}).bindPopup('Earth Prime Comics, 154 Church St, Burlington, VT 05401<br>(802) 860-0581<br>https://www.facebook.com/pages/Earth-Prime-Comics/100881886623776'),
+         brattleboroBooks= L.marker([42.851847199999995, -72.5588389],{icon: bookIcon}).bindPopup('Brattleboro Books, 36 Elliot St, Brattleboro, VT 05301<br>(802) 257-7777<br>http://brattleborobooks.com/'),
+         norwichUniversityBookstore= L.marker([44.1384348, -72.6589372],{icon: bookIcon}).bindPopup('Norwich University Bookstore, Harmon Hall, 158 Harmon Dr, Northfield, VT 05663<br>(802) 485-2200<br>https://www.bkstr.com/norwichustore/home'),
+         phoenixBooksBurlington= L.marker([44.4781155, -73.2117383],{icon: bookIcon}).bindPopup('Phoenix Books Burlington, 191 Bank St, Burlington, VT 05401<br>(802) 448-3350<br>http://phoenixbooks.biz/');
+         
+         ///////////Dispensaries////////////
+         ceresmed= L.marker([44.4558422, -73.13938279999999],{icon: weedIcon}).bindPopup('CeresMED, 2 Green Tree Dr, South Burlington, VT 05403<br>(844) 283-9333<br>http://www.ceresvt.com/'),
+         greenLeafCentral= L.marker([44.476723, -73.21182499999999],{icon: weedIcon}).bindPopup('Green Leaf Central, 30 Thorsen Way, Burlington, VT 05401<br>(802) 862-3900<br>http://greenleafcentral.com/'),
+         magicMann= L.marker([44.506188599999994, -73.0811561],{icon: weedIcon}).bindPopup('Magic Mann, 21 Essex Way Suite 216, Essex Junction, VT 05452<br>(802) 871-5810<br>https://magicmann.com/'),
+         ninthStateCannabis= L.marker([44.253297599999996, -73.2271366],{icon: weedIcon}).bindPopup('9th State Cannabis, 6560 US-7, North Ferrisburgh, VT 05473<br>(802) 539-2065<br>http://www.9thstatevt.com/'),
+         floraCannabis= L.marker([44.0126786, -73.1698017],{icon: weedIcon}).bindPopup('FLŌRA Cannabis, 2 Park St, Middlebury, VT 05753<br>(802) 989-7948<br>http://www.floravt.com/'),
+         blueSageTheValleyDispensary= L.marker([44.184112999999996, -72.835117],{icon: weedIcon}).bindPopup('Blue Sage - The Valley Dispensary, 5121 Main St, Waitsfield, VT 05673<br>(802) 583-2193<br>http://www.bluesagevt.com/'),
+         ceresmedSouth= L.marker([43.988916599999996, -73.135965],{icon: weedIcon}).bindPopup('CeresMED South, 1641 US-7, Middlebury, VT 05753<br>(844) 283-9333<br>http://www.ceresmedvt.com/'),
+         greenStateDispensary= L.marker([44.4602295, -73.2149393],{icon: weedIcon}).bindPopup('Green State Dispensary, 699 Pine St Suite C, Burlington, VT 05401<br>(802) 540-1168<br>https://greenstatedispensary.com/?utm_source=google&utm_medium=organic&utm_campaign=business_listing'),
+         valleyMeadeDispensary= L.marker([44.1815946, -72.84054979999999],{icon: weedIcon}).bindPopup('Valley Meade Dispensary, 8 VT-17, Waitsfield, VT 05673<br>(802) 496-5344<br>http://valleymeade.com/'),
+         ceresCollaborative= L.marker([44.4772144, -73.2121433],{icon: weedIcon}).bindPopup('Ceres Collaborative, 190 College St, Burlington, VT 05401<br>(802) 404-5420<br>http://ceresvt.com/'),
+         floatOnDispensary= L.marker([44.476526, -73.21230899999999],{icon: weedIcon}).bindPopup('Float On Dispensary, 136 1/2 Church St, Burlington, VT 05401<br>(802) 540-1234<br>https://www.floatondispensary.com/'),
+         gramCentralDispensary= L.marker([44.2492095, -72.5624093],{icon: weedIcon}).bindPopup('Gram Central Dispensary, 120 River St, Montpelier, VT 05602<br>(802) 262-1701<br>http://www.gramcentral.com/'),
+         pineGroveOrganicsDispensary= L.marker([43.8040405, -73.0970864],{icon: weedIcon}).bindPopup('Pine Grove Organics - Dispensary, 335 Grove St, Brandon, VT 05733<br>(802) 265-0136<br>http://www.pinegroveorganics.org/'),
+         zenbarnFarms= L.marker([44.3589895, -72.7323718],{icon: weedIcon}).bindPopup('Zenbarn Farms, 1930 Waterbury-Stowe Rd, Waterbury Center, VT 05677<br>(802) 244-8134<br>https://zenbarnmj.com/'),
+         lamoilleCountyCannabisDispensary= L.marker([44.5738609, -72.5955594],{icon: weedIcon}).bindPopup('Lamoille County Cannabis Dispensary, 76 Stafford Ave, Morristown, VT 05661<br>(802) 851-8352<br>https://lamoillecountycannabis.com/'),
+         cloudNineCannabisDispensary= L.marker([43.5932105, -73.26524839999999],{icon: weedIcon}).bindPopup('Cloud Nine Cannabis Dispensary, 87 Main St, Fair Haven, VT 05743<br>(802) 278-8690<br>https://www.cloud9vt.com/'),
+         cambridgeCannabisCompany= L.marker([44.643704299999996, -72.833254],{icon: weedIcon}).bindPopup('Cambridge Cannabis Company, 185 Church St, Cambridge, VT 05464<br>(802) 899-0468<br>https://cambridgecannabiscompany.com/'),
+         capitalCannabisCompany= L.marker([44.2170421, -72.5649397],{icon: weedIcon}).bindPopup('Capital Cannabis Company, next to Walmart, 282 Berlin Mall Rd, Berlin, VT 05602<br>(802) 505-5663<br>http://www.capitalcannabisvt.com/'),
+         theHerbCloset= L.marker([44.4806484, -73.2109151],{icon: weedIcon}).bindPopup('The Herb Closet, 196 Pearl St, Burlington, VT 05401<br>(802) 409-3969<br>http://www.theherbclosetvt.com/'),
+         grassQueen= L.marker([44.4782211, -73.20968839999999],{icon: weedIcon}).bindPopup('Grass Queen, 71 S Union St, Burlington, VT 05401<br>(802) 399-2485<br>https://grassqueenvt.com/'),
+         winooskiOrganics= L.marker([44.4923362, -73.18021999999999],{icon: weedIcon}).bindPopup('Winooski Organics, 165 E Allen St, Winooski, VT 05404<br>(802) 899-9333<br>http://www.winooskiorganics.com/'),
+         bernGalleryDispensary= L.marker([44.4756437, -73.2135046],{icon: weedIcon}).bindPopup('Bern Gallery Dispensary, 135 Main St, Burlington, VT 05401<br>(802) 865-0994<br>http://www.berngallerydispensary.com/'),
+         theGasStationDispensary= L.marker([43.596252899999996, -72.969588],{icon: weedIcon}).bindPopup('The Gas Station Dispensary, 180 S Main St, Rutland, VT 05701<br>(802) 855-8357<br>http://gasstationvt.com/'),
+         euphoriaCannabis= L.marker([44.4891547, -73.2256797],{icon: weedIcon}).bindPopup('Euphoria Cannabis, 276 North Ave, Burlington, VT 05401<br>(802) 343-7770<br>https://euphoriavt.com/'),
+         vermontTrapHouse= L.marker([43.592619, -73.264905],{icon: weedIcon}).bindPopup('Vermont Trap House, 41 Main St, Fair Haven, VT 05743<br>(802) 287-0297<br>http://vermonttraphouse.com/'),
+         eponaFarmsStoreDispensary= L.marker([43.7861694, -73.06653969999999],{icon: weedIcon}).bindPopup('Epona Farms Store - Dispensary, 1410 Franklin St, Brandon, VT 05733<br>(802) 736-6287<br>http://www.eponafarms.org/'),
+         goodfireDispensary= L.marker([44.3815734, -72.72100329999999],{icon: weedIcon}).bindPopup('GoodFire Dispensary, 3627 Waterbury-Stowe Rd, Waterbury Center, VT 05677<br>(802) 224-8888<br>https://goodfirevt.com/'),
+         greenUnionDispensary= L.marker([43.530279, -72.7378627],{icon: weedIcon}).bindPopup('Green Union Dispensary, 4738 VT-100A, Plymouth, VT 05056<br>(802) 672-1000<br>http://www.greenunionvt.com/'),
+         NorthDispensary= L.marker([44.3692122, -72.7286677],{icon: weedIcon}).bindPopup('31 North Dispensary, 2653 Waterbury-Stowe Rd, Waterbury, VT 05677<br>(802) 560-7927<br>https://www.31northvt.com/'),
+         wildLegacyCannabis= L.marker([44.5640097, -72.5980189],{icon: weedIcon}).bindPopup('Wild Legacy Cannabis, 10 Railroad St, Morristown, VT 05661<br>(802) 851-8735<br>http://www.wildlegacycannabis.com/'),
+         sundayDriveDispensary= L.marker([43.6326633, -72.5038905],{icon: weedIcon}).bindPopup('Sunday Drive Dispensary, 442 Woodstock Rd Suite 3A, Woodstock, VT 05091<br>(802) 332-0049<br>http://www.vtsundaydrive.com/'),
+         silverTherapeuticsCannabisDispensaryBennington= L.marker([42.8987621, -73.2085799],{icon: weedIcon}).bindPopup('Silver Therapeutics Cannabis Dispensary Bennington, 201 Northside Dr, Bennington, VT 05201<br>(802) 440-5170<br>https://silver-therapeutics.com/location/recreational-cannabis-dispensary-bennington-vt-05201/'),
+         mountainGirlCannabis= L.marker([43.6074335, -72.9822289],{icon: weedIcon}).bindPopup('Mountain Girl Cannabis, 174 West St, Rutland, VT 05701<br>(802) 353-0034<br>http://www.mountaingirlcannabis.com/'),
+         somewhereOnTheMountain= L.marker([43.6192967, -72.9739914],{icon: weedIcon}).bindPopup('Somewhere On The Mountain, 158 N Main St, Rutland, VT 05701<br>(802) 776-4447<br>http://www.somewhereonthemountain.com/'),
+         theoryWellnessBrattleboroRecreationalCannabisDispensary= L.marker([42.8743815, -72.56132099999999],{icon: weedIcon}).bindPopup('Theory Wellness: Brattleboro Recreational Cannabis Dispensary, 768 Putney Rd, Brattleboro, VT 05301<br>(802) 454-3480<br>https://theorywellness.org/vermont-dispensary/brattleboro-recreational-cannabis-dispensary/'),
+         polestarCannabis= L.marker([43.923732, -72.663884],{icon: weedIcon}).bindPopup('Polestar Cannabis, 24 Pleasant St, Randolph, VT 05060<br>(802) 565-5168<br>http://www.polestarvt.com/'),
+         ratuSCannabisSupplyLlcAdultUseCannabisStore= L.marker([42.869735999999996, -72.87393999999999],{icon: weedIcon}).bindPopup('Ratu\'s Cannabis Supply, LLC Adult-use Cannabis store, 36 W Main St, Wilmington, VT 05363<br>(802) 464-1390<br>http://ratuscannabis.com/'),
+         theTeaHouse= L.marker([43.652607599999996, -72.3308835],{icon: weedIcon}).bindPopup('The Tea House, 50 Woodstock Rd, White River Junction, VT 05001<br>(802) 332-6043<br>http://teahousevt.com/'),
+         maryJaneMountainVermont= L.marker([44.8779226, -72.60942659999999],{icon: weedIcon}).bindPopup('Mary Jane Mountain Vermont, 91 Main St, Montgomery Center, VT 05471<br>(802) 326-2006<br>https://www.leafly.com/dispensary-info/mary-jane-mountain'),
+         mothaplantDispensary= L.marker([44.841947999999995, -73.0800059],{icon: weedIcon}).bindPopup('MothaPlant Dispensary, 319 Swanton Rd, St Albans City, VT 05478<br>(802) 782-8623<br>http://mothaplant.com/'),
+         higherElevation= L.marker([44.572117999999996, -72.593807],{icon: weedIcon}).bindPopup('Higher Elevation, 65 Northgate Ave Suite 6, Morrisville, VT 05661<br>(802) 200-2937<br>https://higherelevationvt.com/'),
+         vermontBudBarn= L.marker([42.8660254, -72.6132227],{icon: weedIcon}).bindPopup('Vermont Bud Barn, 257 Marlboro Rd Suite 101, Brattleboro, VT 05301<br>(802) 246-4367<br>https://vtbudbarn.com/'),
+         forbinsReserveForbinsfinestCultivation= L.marker([44.198350399999995, -72.50477409999999],{icon: weedIcon}).bindPopup('Forbins Reserve + ForbinsFinest Cultivation, 21 Metro Way Unit 8, Barre, VT 05641<br>(802) 622-0359<br>https://forbinsfinest.com/forbins-reserve/'),
+         littleCityGreens= L.marker([44.1675354, -73.2513821],{icon: weedIcon}).bindPopup('Little City Greens, 7 N Green St Suite 2, Vergennes, VT 05491<br>(802) 870-7729<br>https://www.littlecitygreens.com/'),
+         givingTreeCannabisVermontCraftDispensary= L.marker([43.4048076, -73.24449129999999],{icon: weedIcon}).bindPopup('Giving Tree Cannabis Vermont Craft Dispensary, 946 VT-149, Pawlet, VT 05775<br>(802) 384-4183<br>http://givingtreecannabis.com/'),
+         theGreenMan= L.marker([44.4553258, -72.0165595],{icon: weedIcon}).bindPopup('The Green Man, 1591 Memorial Dr, St Johnsbury, VT 05819<br>(802) 535-0669<br>http://www.thegreenmancannabis.com/'),
+         theHighCountryLlc= L.marker([44.9484589, -72.1700602],{icon: weedIcon}).bindPopup('The High Country LLC, 5134 US-5, Derby, VT 05829<br>(802) 487-9675<br>http://thehighcountry.us/'),
+         stoneLeafCannabis= L.marker([43.5132098, -72.4026509],{icon: weedIcon}).bindPopup('Stone Leaf Cannabis, 71 Artisans Way, Windsor, VT 05089<br>(802) 674-4674<br>http://www.stoneleafvt.com/'),
+         depotShop= L.marker([43.4804241, -72.38498779999999],{icon: weedIcon}).bindPopup('DePot Shop, 25 Depot Ave, Windsor, VT 05089<br><br>http://www.depotshopvt.com/'),
+         theDankClosetDispensary= L.marker([44.787608299999995, -72.2136338],{icon: weedIcon}).bindPopup('The Dank Closet Dispensary, 3098 Barton Orleans Rd, Barton, VT 05860<br><br>https://dankcloset.com/'),
+         kingdomKind= L.marker([44.744267099999995, -72.18134599999999],{icon: weedIcon}).bindPopup('Kingdom Kind, 290 Glover Rd, Barton, VT 05822<br>(802) 243-4367<br>https://nekkind.com/'),
+         northeastKannabis= L.marker([44.414957199999996, -72.0163014],{icon: weedIcon}).bindPopup('Northeast Kannabis, 166 Railroad St, St Johnsbury, VT 05819<br>(802) 424-1760<br>http://northeastkannabis.com/'),
+         trueCannabis= L.marker([44.476769, -73.212334],{icon: weedIcon}).bindPopup('True 802 Cannabis, 132 Church St, Burlington, VT 05401<br>(802) 540-1420<br>http://www.true802cannabis.com/'),
+         cannabisMaximus= L.marker([42.8744308, -72.5593248],{icon: weedIcon}).bindPopup('Cannabis Maximus, 725 Putney Rd, Brattleboro, VT 05301<br>(802) 490-2253<br>http://www.cannmaxx.com/'),
+         juniperLane= L.marker([42.878082899999995, -73.1957887],{icon: weedIcon}).bindPopup('Juniper Lane, 445 Main St, Bennington, VT 05201<br>(802) 440-5755<br>http://juniperlanecannabis.com/');
+         
+         
+         ///////////Layers////////////
+         var bookstores = L.layerGroup([theVermontBookShop,
+         flyingPigBookstore,
+         crowBookshopCrowBooks,
+         monroeStreetBooks,
+         otterCreekUsedBooks,
+         barnesNoble,
+         phoenixBooksEssex,
+         bridgesideBooks,
+         theBookstore,
+         speakingVolumesBooks,
+         nextChapterBookstore,
+         champlainCollegeCampusStore,
+         uvmBookstore,
+         tempestBookShop,
+         phoenixBooksRutland,
+         bearPondBooksStore,
+         yankeeBookshop,
+         theEloquentPage,
+         recycledReadingOfVermontBooksInstruments,
+         northshireBookstore,
+         uvmBookstore,
+         galaxyBookshop,
+         theBookmobile,
+         norwichBookstore,
+         theCountryBookshop,
+         hermitHillBooks,
+         starCatBooks,
+         sandySBooksAndBakery,
+         theBookNook,
+         bookLovers,
+         greenMountainBooksPrints,
+         villageSquareBooksellers,
+         bartlebySBooks,
+         barristerSBookshop,
+         benningtonBookshop,
+         boxcarCaboose,
+         whiteFoxRareBooksAndAntiques,
+         middleburyCollegeStore,
+         theBookShop,
+         everyoneSBooks,
+         archBridgeBookshop,
+         bearPondBooks,
+         antidoteBooks,
+         nevermoreBookstore,
+         catamountBooks,
+         secondHandProse,
+         theBookGarden,
+         earthPrimeComics,
+         brattleboroBooks,
+         norwichUniversityBookstore,
+         phoenixBooksBurlington]);
+         
+         var dispensaries = L.layerGroup([
+         ceresmed,
+         greenLeafCentral,
+         magicMann,
+         ninthStateCannabis,
+         floraCannabis,
+         blueSageTheValleyDispensary,
+         ceresmedSouth,
+         greenStateDispensary,
+         valleyMeadeDispensary,
+         ceresCollaborative,
+         floatOnDispensary,
+         gramCentralDispensary,
+         pineGroveOrganicsDispensary,
+         zenbarnFarms,
+         lamoilleCountyCannabisDispensary,
+         cloudNineCannabisDispensary,
+         cambridgeCannabisCompany,
+         capitalCannabisCompany,
+         theHerbCloset,
+         grassQueen,
+         winooskiOrganics,
+         bernGalleryDispensary,
+         theGasStationDispensary,
+         euphoriaCannabis,
+         vermontTrapHouse,
+         eponaFarmsStoreDispensary,
+         goodfireDispensary,
+         greenUnionDispensary,
+         NorthDispensary,
+         wildLegacyCannabis,
+         sundayDriveDispensary,
+         silverTherapeuticsCannabisDispensaryBennington,
+         mountainGirlCannabis,
+         somewhereOnTheMountain,
+         theoryWellnessBrattleboroRecreationalCannabisDispensary,
+         polestarCannabis,
+         ratuSCannabisSupplyLlcAdultUseCannabisStore,
+         theTeaHouse,
+         maryJaneMountainVermont,
+         mothaplantDispensary,
+         higherElevation,
+         vermontBudBarn,
+         forbinsReserveForbinsfinestCultivation,
+         littleCityGreens,
+         givingTreeCannabisVermontCraftDispensary,
+         theGreenMan,
+         theHighCountryLlc,
+         stoneLeafCannabis,
+         depotShop,
+         theDankClosetDispensary,
+         kingdomKind,
+         northeastKannabis,
+         trueCannabis,
+         cannabisMaximus,
+         juniperLane,
+            ]);
+         
+           var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+             maxZoom: 19,
+             attribution: '© OpenStreetMap'
+         })
+         
+         ///////////Maps///////////////////
+            var map = L.map('map',{
+                center: [44.00, -72.42],
+             zoom: 8,
+             layers: [osm, bookstores, dispensaries]
+         });
+         
+            var baseMaps = {
+             "OpenStreetMap": osm
+         };
+         
+         var overlayMaps = {
+             "Bookstores": bookstores,
+             "Dispensaries" : dispensaries
+         };
+         
+         
+         var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+         
+      </script>
+   </body>
 </html>
