@@ -33,12 +33,8 @@
 
 <script>
     (function(){
-
-        $.getJSON('http://ip.jsontest.com/', function(data) {
-  //console.log(data);
-  userID = data
+  userID = 'carson-test'
   console.log(userID)
-  console.log('user id = ' + (JSON.stringify(data, null, 2)));
   return userID
 
 // This function creates visitors and accounts in Pendo
@@ -68,7 +64,6 @@
             // as long as it's not one of the above reserved names.
         } 
     }); 
-    });
 })();
 </script>
 
