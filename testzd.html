@@ -5,13 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>My Website</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+
+          <!-- Pendo -->
+      <script>
+         (function(apiKey){
+             (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+             v=['initialize','identify','updateOptions','pageLoad','track'];for(w=0,x=v.length;w<x;++w)(function(m){
+                 o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+                 y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
+                 z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+                 userID = 'carson-test';
+                 accountID = 'carson-test-account';
+         
+                 pendo.initialize({
+                   visitor: {
+                     id:              userID  // Required if user is logged in
+                     // email:        // Recommended if using Pendo Feedback, or NPS Email
+                     // full_name:    // Recommended if using Pendo Feedback
+                     // role:         // Optional
+         
+                     // You can add any additional visitor level key-values here,
+                     // as long as it's not one of the above reserved names.
+                   },
+         
+                   account: {
+                     id:           accountID // Required if using Pendo Feedback
+                     // name:         // Optional
+                     // is_paying:    // Recommended if using Pendo Feedback
+                     // monthly_value:// Recommended if using Pendo Feedback
+                     // planLevel:    // Optional
+                     // planPrice:    // Optional
+                     // creationDate: // Optional
+         
+                     // You can add any additional account level key-values here,
+                     // as long as it's not one of the above reserved names.
+                   },
+                 });
+         })('010e65dc-ce76-4697-47d6-67e316112fec');
+      </script>
+      <!-- end pendo -->
+
+
   </head>
-  <body>
-    <main>
-        <h1>Welcome to My Website</h1>  
-    </main>
-	<script src="index.js"></script>
+ 
+  <body id = 'zdtest'>
+    <h1>Welcome to My Website</h1>  
+    <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=8bf5673c-b666-4833-b2e0-d78615c9feaf"> </script>
+    <div id='myLauncher' onclick='openWidget()'>Click to chat with me!</div>
+    <script type="text/javascript">
+zE('webWidget', 'hide');
+
+function openWidget() {
+  zE('webWidget', 'show');
+  zE('webWidget', 'open');
+  document.querySelector('#myLauncher').style.opacity = 0;
+};
+
+zE('webWidget:on', 'close', function() {
+  zE('webWidget', 'hide');
+  document.querySelector('#myLauncher').style.opacity = 1;
+})
+</script>
+
+
   </body>
 </html>

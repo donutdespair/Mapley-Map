@@ -6,3 +6,24 @@ html, body {
 
 
 #map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+
+#zdtest {
+	background-color: black;
+	color: white;
+	background-image: url(https://64.media.tumblr.com/tumblr_ma242tsKGx1rpgjpeo1_500.gif);
+background-repeat:no-repeat;
+background-position: center center;
+}
+
+#myLauncher {
+  background-color: red;
+  padding: 10px;
+  border-radius: 4px;
+  width: 100px;
+  text-align: center;
+  color: white;
+  font-family: sans-serif;
+  position: fixed;
+  bottom: -2px;
+  right: 10px;
+}
