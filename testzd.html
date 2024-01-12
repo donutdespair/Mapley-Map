@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-          <title>Testing out this thing</title>
+   <head>
+      <title>Testing out this thing</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <link rel="stylesheet" type="text/css" href="styles/styles.css" />
-       <script
+      <script
          src="https://code.jquery.com/jquery-3.7.0.min.js"
          integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
          crossorigin="anonymous"></script>
-         
-          <!-- Pendo -->
+      <!-- Pendo -->
       <script>
          (function(apiKey){
              (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
@@ -48,29 +47,25 @@
          })('6334f7c3-b075-4e68-55ac-e313c9ebe3ff');
       </script>
       <!-- end pendo -->
-
-
-  </head>
- 
-  <body id = 'zdtest'>
-    <h1>BURGER</h1>  
-    <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=8bf5673c-b666-4833-b2e0-d78615c9feaf"> </script>
-    <div id='myLauncher' onclick='openWidget()'>Click to chat with me!</div>
-    <script type="text/javascript">
-zE('webWidget', 'hide');
-
-function openWidget() {
-  zE('webWidget', 'show');
-  zE('webWidget', 'open');
-  document.querySelector('#myLauncher').style.opacity = 0;
-};
-
-zE('webWidget:on', 'close', function() {
-  zE('webWidget', 'hide');
-  document.querySelector('#myLauncher').style.opacity = 1;
-})
-</script>
-
-
-  </body>
+   </head>
+   <body id = 'zdtest'>
+      <h1>BURGER</h1>
+      <!-- Zendesk -->
+      <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=8bf5673c-b666-4833-b2e0-d78615c9feaf"> </script>
+      <div id='myLauncher' onclick='openWidget()'><img src="burger.svg" class="image"></div>
+      <script type="text/javascript">
+         zE('webWidget', 'hide');
+         
+         function openWidget() {
+           zE('webWidget', 'show');
+           zE('webWidget', 'open');
+           document.querySelector('#myLauncher').style.opacity = 0;
+         };
+         
+         zE('webWidget:on', 'close', function() {
+           zE('webWidget', 'hide');
+           document.querySelector('#myLauncher').style.opacity = 1;
+         })
+      </script>
+   </body>
 </html>
