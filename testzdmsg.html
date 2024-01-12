@@ -51,8 +51,31 @@
    <body id = 'zdtest'>
       <h1>BURGER</h1>
       <!-- Zendesk -->
+      <!-- Start of d3v-mapleymap Zendesk Widget script -->
       <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=8bf5673c-b666-4833-b2e0-d78615c9feaf"> </script>
-<!-- Try this: https://developer.zendesk.com/documentation/zendesk-web-widget-sdks/sdks/web/messaging-web-widget-qs/ -->
-
+      <script>
+         window.onload = function(){ 
+         const conversationBadge = document.querySelector('#myLauncher')
+         
+         
+         // on page load always close widget
+         zE('messenger', 'close');
+         //document.querySelector('#myLauncher').style.opacity = 1;
+         
+         conversationBadge.onclick = () => {
+           // open widget
+           zE('messenger', 'open');
+           //document.querySelector('#myLauncher').style.opacity = 0;
+           // reset unread indicator
+         }
+         
+         };
+         
+      </script>
+      <!-- End of d3v-mapleymap Zendesk Widget script -->
+      <!-- Try this: https://developer.zendesk.com/documentation/zendesk-web-widget-sdks/sdks/web/messaging-web-widget-qs/ -->
+      <div id='myLauncher'>
+         <img src="burger.svg" class="image">
+      </div>
    </body>
 </html>
